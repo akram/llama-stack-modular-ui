@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import * as React from 'react';
-import { Alert, Button, Label, Spinner, Title } from '@patternfly/react-core';
+import { Alert, Button, Label, Spinner, Title, Select, SelectOption } from '@patternfly/react-core';
 import {
   Chatbot,
   ChatbotContent,
@@ -42,7 +42,8 @@ const ChatbotMain: React.FunctionComponent = () => {
   const [isShareChatbotOpen, setIsShareChatbotOpen] = React.useState(false);
   const scrollToBottomRef = React.useRef<HTMLDivElement>(null);
   const { models, loading, error, fetchLlamaModels } = useFetchLlamaModels();
-  const modelId = models[1]?.identifier;
+  const [selectedModelId, setSelectedModelId] = React.useState<string | undefined>(undefined);
+  const [isModelSelectOpen, setIsModelSelectOpen] = React.useState(false);
 
   const footnoteProps = {
     label: 'Always review AI generated content prior to use',
@@ -81,6 +82,12 @@ const ChatbotMain: React.FunctionComponent = () => {
     }
   }, [messages]);
 
+  React.useEffect(() => {
+    if (models.length > 0 && !selectedModelId) {
+      setSelectedModelId(models[0].identifier);
+    }
+  }, [models, selectedModelId]);
+
   if (loading) {
     return <Spinner size="sm" />;
   }
@@ -93,8 +100,8 @@ const ChatbotMain: React.FunctionComponent = () => {
   // };
 
   const handleMessageSend = async (userInput: string) => {
-    if (!userInput || !modelId) {
-      console.log('No user input or model ID ', userInput, modelId);
+    if (!userInput || !selectedModelId) {
+      console.log('No user input or model ID ', userInput, selectedModelId);
       return;
     }
 
@@ -120,7 +127,7 @@ const ChatbotMain: React.FunctionComponent = () => {
     setMessages(updatedMessages);
 
     try {
-      const response = await completeChat(transformMessage, modelId);
+      const response = await completeChat(transformMessage, selectedModelId);
       console.log('Raw completion response:', response);
       const responseObject = JSON.parse(response);
       const completion = responseObject?.completion_message;
@@ -150,6 +157,13 @@ const ChatbotMain: React.FunctionComponent = () => {
     }
   };
 
+  const handleModelSelect = (event: any, value: string) => {
+    setSelectedModelId(value);
+    setIsModelSelectOpen(false);
+  };
+
+  const modelId = selectedModelId;
+
   return (
     <>
       {isShareChatbotOpen && <ChatbotShareModal onToggle={() => setIsShareChatbotOpen(!isShareChatbotOpen)} />}
@@ -163,6 +177,32 @@ const ChatbotMain: React.FunctionComponent = () => {
               <Label variant="outline" color="blue" style={{ marginLeft: 'var(--pf-t--global--spacer--sm)' }}>
                 {modelId}
               </Label>
+              <Select
+                variant="default"
+                aria-label="Select Model"
+                onOpenChange={setIsModelSelectOpen}
+                onSelect={(event, value) => handleModelSelect(event, value as string)}
+                selected={selectedModelId}
+                isOpen={isModelSelectOpen}
+                style={{ marginLeft: 16, minWidth: 200 }}
+                toggle={{
+                  toggleNode: (
+                    <Button
+                      variant="secondary"
+                      aria-label="Select Model Toggle"
+                      style={{ minWidth: 200 }}
+                    >
+                      {selectedModelId || 'Select model'}
+                    </Button>
+                  )
+                }}
+              >
+                {models.map((model) => (
+                  <SelectOption key={model.identifier} value={model.identifier}>
+                    {model.identifier}
+                  </SelectOption>
+                ))}
+              </Select>
             </ChatbotHeaderTitle>
           </ChatbotHeaderMain>
           <ChatbotHeaderActions>
