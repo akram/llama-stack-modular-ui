@@ -40,7 +40,7 @@ const ChatbotMain: React.FunctionComponent = () => {
   const [messages, setMessages] = React.useState<MessageProps[]>([initialBotMessage]);
   const [showPopover, setShowPopover] = React.useState(false);
   const [isShareChatbotOpen, setIsShareChatbotOpen] = React.useState(false);
-  const scrollToBottomRef = React.useRef<HTMLDivElement>(null);
+  const scrollToBottomRef = React.useRef<HTMLDivElement>(null!);
   const { models, loading, error, fetchLlamaModels } = useFetchLlamaModels();
   const [selectedModelId, setSelectedModelId] = React.useState<string | undefined>(undefined);
   const [isModelSelectOpen, setIsModelSelectOpen] = React.useState(false);
