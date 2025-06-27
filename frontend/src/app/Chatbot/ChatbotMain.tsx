@@ -284,7 +284,7 @@ const ChatbotMain: React.FunctionComponent = () => {
                 Chatbot
               </Title>
               <Label variant="outline" color="blue" style={{ marginLeft: 'var(--pf-t--global--spacer--sm)' }}>
-                {modelId}
+                {selectedModelId}
               </Label>
               <Select
                 variant="default"
