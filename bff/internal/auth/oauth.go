@@ -49,9 +49,9 @@ func ExtractToken(r *http.Request) (string, error) {
 	return parts[1], nil
 }
 
-// ValidateToken validates the token with OpenShift OAuth server
+// ValidateToken validates the token with OpenShift API server
 func (h *OAuthHandler) ValidateToken(ctx context.Context, token string) error {
-	url := h.config.OAuthServerURL + "/apis/user.openshift.io/v1/users/~"
+	url := h.config.OpenShiftApiServerUrl + "/apis/user.openshift.io/v1/users/~"
 	log.Printf("[BFF] Validating token against: %s", url)
 	req, err := http.NewRequestWithContext(ctx, "GET", url, nil)
 	if err != nil {

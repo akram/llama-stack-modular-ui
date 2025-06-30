@@ -1,6 +1,7 @@
 package api
 
 import (
+	"fmt"
 	"io"
 	"log/slog"
 	"net/http"
@@ -27,6 +28,25 @@ type App struct {
 
 func NewApp(cfg config.EnvConfig, logger *slog.Logger) (*App, error) {
 	logger.Debug("Initializing app with config", slog.Any("config", cfg))
+
+	// Validate OAuth configuration
+	if cfg.OAuthEnabled {
+		if cfg.OAuthServerURL == "" {
+			return nil, fmt.Errorf("OAUTH_SERVER_URL is required when OAuth is enabled")
+		}
+		if cfg.OAuthClientID == "" {
+			return nil, fmt.Errorf("OAUTH_CLIENT_ID is required when OAuth is enabled")
+		}
+		if cfg.OAuthClientSecret == "" {
+			return nil, fmt.Errorf("OAUTH_CLIENT_SECRET is required when OAuth is enabled")
+		}
+		if cfg.OAuthRedirectURI == "" {
+			return nil, fmt.Errorf("OAUTH_REDIRECT_URI is required when OAuth is enabled")
+		}
+		logger.Info("OAuth configuration validated",
+			slog.String("oauth_server_url", cfg.OAuthServerURL),
+			slog.String("openshift_api_server_url", cfg.OpenShiftApiServerUrl))
+	}
 
 	app := &App{
 		config: cfg,

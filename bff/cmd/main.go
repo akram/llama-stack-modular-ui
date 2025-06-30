@@ -29,6 +29,7 @@ func main() {
 	flag.StringVar(&cfg.OAuthClientSecret, "oauth-client-secret", getEnvAsString("OAUTH_CLIENT_SECRET", ""), "OAuth client secret")
 	flag.StringVar(&cfg.OAuthRedirectURI, "oauth-redirect-uri", getEnvAsString("OAUTH_REDIRECT_URI", ""), "OAuth redirect URI")
 	flag.StringVar(&cfg.OAuthServerURL, "oauth-server-url", getEnvAsString("OAUTH_SERVER_URL", ""), "OAuth server URL")
+	flag.StringVar(&cfg.OpenShiftApiServerUrl, "openshift-api-server-url", getEnvAsString("OPENSHIFT_API_SERVER_URL", "https://kubernetes.default.svc.cluster.local"), "OpenShift API server URL for token validation")
 
 	flag.Parse()
 

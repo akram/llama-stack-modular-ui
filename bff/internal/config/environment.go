@@ -9,11 +9,12 @@ type EnvConfig struct {
 	AllowedOrigins  []string
 
 	// OAuth Configuration
-	OAuthEnabled      bool
-	OAuthClientID     string
-	OAuthClientSecret string
-	OAuthRedirectURI  string
-	OAuthServerURL    string
+	OAuthEnabled          bool
+	OAuthClientID         string
+	OAuthClientSecret     string
+	OAuthRedirectURI      string
+	OAuthServerURL        string
+	OpenShiftApiServerUrl string
 }
 
 //MockK8Client    bool
